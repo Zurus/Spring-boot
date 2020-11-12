@@ -1,16 +1,13 @@
 package com.boblob.blog.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by ADivaev on 05.11.2020.
  */
 
 @Entity
-public class Post {
+public class Post  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,14 +16,23 @@ public class Post {
     private String title, anons, full_text;
     private int views;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User author;
 
     public Post() {
     }
 
-    public Post(String title, String anons, String full_text) {
+    public Post(String title, String anons, String full_text, User user) {
         this.title = title;
         this.anons = anons;
         this.full_text = full_text;
+        this.author = user;
+    }
+
+
+    public String getAuthorName() {
+        return author != null ? author.getUsername() : "<none>";
     }
 
     public Long getId() {
@@ -67,5 +73,13 @@ public class Post {
 
     public void setViews(int views) {
         this.views = views;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
     }
 }

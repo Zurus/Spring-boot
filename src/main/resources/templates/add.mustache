@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div>
+        <form action="/logout" method="post">
+            <input type="submit" value="Sing Out"/>
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+        </form>
+        <form method="post">
+            <input type="text" name="title" placeholder="Введите титульное сообщение"/>
+            <input type="text" name="anons" placeholder="Введите аннос"/>
+            <input type="text" name="full_text" placeholder="Введите текст"/>
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+            <button type="submit">Добавить</button>
+        </form>
+    </div>
+</body>
+</html>
+
