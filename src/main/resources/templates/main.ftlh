@@ -18,7 +18,7 @@
                 <strong>${post.authorName}</strong>
                 <div>
                     <#if post.fileName??>
-                        <img src="/img/${message.fileName}">
+                        <img src="/img/${post.fileName}">
                     </#if>
                 </div>
             </div>

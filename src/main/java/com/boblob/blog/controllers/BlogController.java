@@ -36,7 +36,7 @@ public class BlogController {
         return "greeting";
     }
 
-    @Value("${upload.path")
+    @Value("${upload.path}")
     private String uploadPath;
 
     @GetMapping("/list")
@@ -59,10 +59,8 @@ public class BlogController {
             }
 
             String uuidFile = UUID.randomUUID().toString();
-            String resultFileName = uuidFile + "." + file.getOriginalFilename();
-            System.out.println(resultFileName);
+            String resultFileName = uuidFile + "_" + file.getOriginalFilename();
             file.transferTo(new File(uploadPath + "/" + resultFileName));
-
 
             post.setFileName(resultFileName);
         }
