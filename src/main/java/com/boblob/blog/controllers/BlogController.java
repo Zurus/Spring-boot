@@ -52,7 +52,7 @@ public class BlogController {
             @RequestParam("file") MultipartFile file, Model model) throws IOException {
         Post post = new Post(title, anons, full_text, user);
 
-        if (file != null) {
+        if (file != null && !file.getOriginalFilename().isEmpty()) {
             File uploadFolder = new File(uploadPath);
             if (!uploadFolder.exists()) {
                 uploadFolder.mkdir();
