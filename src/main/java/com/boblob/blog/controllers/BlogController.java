@@ -5,6 +5,7 @@ import com.boblob.blog.models.Role;
 import com.boblob.blog.models.User;
 import com.boblob.blog.repo.PostRepository;
 import com.boblob.blog.repo.UserRepo;
+import com.boblob.blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,7 +30,7 @@ public class BlogController {
     private PostRepository postRepository;
 
     @Autowired
-    private UserRepo userRepo;
+    private UserService userService;
 
     @GetMapping
     public String greeting() {
@@ -81,14 +82,10 @@ public class BlogController {
 
     @PostMapping("/registration")
     public String addUser(User user, Model model) {
-        User userFromDb = userRepo.findByUsername(user.getUsername());
-        if (userFromDb != null) {
+        if (!userService.addUser(user)) {
             model.addAttribute("message", "User exists!");
             return "registration";
         }
-        user.setActive(true);
-        user.setRoles(Collections.singleton(Role.USER));
-        userRepo.save(user);
         return "redirect:/login";
     }
 
@@ -104,60 +101,17 @@ public class BlogController {
         return "main";
     }
 
-//
-//    @GetMapping("/blog")
-//    public String blogMain(Model model) {
-//        Iterable<Post> posts = postRepository.findAll();
-//        model.addAttribute("posts", posts);
-//        return "blog-main";
-//    }
-//
-//    @GetMapping("/blog/{id}")
-//    public String blogDetails(@PathVariable(value="id") long postId, Model model) {
-//        if (!postRepository.existsById(postId)) {
-//             return "redirect:/blog";
-//        }
-//
-//        Optional<Post> post =  postRepository.findById(postId);
-//        List<Post> res = new ArrayList<>();
-//        post.ifPresent(res::add);
-//        model.addAttribute("post", res);
-//        return "blog-details";
-//    }
-//
-//    @GetMapping("/blog/{id}/edit")
-//    public String blogEdit(@PathVariable(value="id") long postId, Model model) {
-//        if (!postRepository.existsById(postId)) {
-//             return "redirect:/blog";
-//        }
-//
-//        Optional<Post> post =  postRepository.findById(postId);
-//        List<Post> res = new ArrayList<>();
-//        post.ifPresent(res::add);
-//        model.addAttribute("post", res);
-//        return "blog-edit";
-//    }
-//
-//    @PostMapping("/blog/add")
-//    public String blogPostAdd(@RequestParam String title, @RequestParam String anons, @RequestParam String full_text,  Model model) {
-//        Post post = new Post(title, anons, full_text);
-//        postRepository.save(post);
-//        return "redirect:/blog";
-//    }
-//
-//    @PostMapping("/blog/{id}/edit")
-//    public String blogPostUpdate(@PathVariable(value ="id") long id, @RequestParam String title, @RequestParam String anons, @RequestParam String full_text,  Model model) {
-//        Post post = postRepository.findById(id).orElseThrow(null);
-//        post.setTitle(title);
-//        post.setAnons(anons);
-//        post.setFull_text(full_text);
-//        postRepository.save(post);
-//        return "redirect:/blog";
-//    }
-//    @PostMapping("/blog/{id}/remove")
-//    public String blogPostDelete(@PathVariable(value ="id") long id,  Model model) {
-//        Post post = postRepository.findById(id).orElseThrow(null);
-//        postRepository.delete(post);
-//        return "redirect:/blog";
-//    }
+    @GetMapping("/activate/{code}")
+    public String activateCode(Model model, @PathVariable String code) {
+        boolean isActivated = userService.activateUser(code);
+
+        if (isActivated) {
+            model.addAttribute("message", "User seccessfully activated");
+        } else {
+            model.addAttribute("message", "Активация не прошла!");
+        }
+
+        return "login";
+    }
+
 }

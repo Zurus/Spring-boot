@@ -2,8 +2,7 @@
 <#import "parts/login.ftlh" as l>
 <@c.page>
 <h3>registration page</h3>
-<section class="jumbotron text-center">
-    <@l.login "/registration" />
-</section>
+    ${message?ifExists}
+    <@l.login "/registration" true/>
 </@c.page>
 
